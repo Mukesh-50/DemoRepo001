@@ -1,0 +1,22 @@
+### Test Case: Verify New User Signup Link Opens Signup Page
+
+Feature: Login Page Navigation Test Type: Positive URL: https://freelance-learn-automation.vercel.app/login
+
+| Field           | Details                                                  |
+| --------------- | -------------------------------------------------------- |
+| Test Case ID    | TC_LOGIN_003                                             |
+| Test Scenario   | Verify the "New user? Signup" link opens the signup page |
+| Preconditions   | Login page is accessible                                 |
+| Expected Result | User should be taken to the signup page                  |
+
+### Test Steps
+
+| Step | Action                          | Test Data | Expected Result                     |
+| ---- | ------------------------------- | --------- | ----------------------------------- |
+| 1    | Navigate to login page          | Login URL | Login page should be displayed      |
+| 2    | Click the "New user? Signup" link |         | Signup page should open             |
+| 3    | Verify signup page URL          |           | URL should contain signup           |
+
+Pass Criteria: The test passes if clicking the link opens a page whose URL contains signup.
+
+Test Status: Not Run.
