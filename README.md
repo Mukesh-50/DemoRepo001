@@ -45,10 +45,23 @@ npx playwright install chromium
 cp .env.example .env               # then open .env and paste your key
 ```
 
+## Two versions of the same workflow
+
+Both versions do exactly the same thing and use the same `test_cases/` and `tests/` folders. Only the code structure is different.
+
+| | Version 1: single file | Version 2: framework |
+|---|---|---|
+| Run | `python v1_single_file.py` | `python main.py` |
+| Code | Everything in one file | Split into `main.py`, `config.py` and `workflow/` |
+| Best for | Learning: read the whole flow top to bottom | Real projects: easy to find, change and test one part |
+
+Start with Version 1 to understand the workflow, then open Version 2 to see how the same code is organised into a framework.
+
 ## Run
 
 ```bash
-python main.py
+python v1_single_file.py    # Version 1
+python main.py              # Version 2
 ```
 
 You will see:
