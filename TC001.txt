@@ -1,0 +1,28 @@
+### Test Case: Verify Successful Login with Valid Credentials
+
+Feature: Login Functionality Test Type: Positive / Happy Path URL: [https://freelance-learn-automation.vercel.app/login](https://freelance-learn-automation.vercel.app/login)
+
+| Field           | Details                                                       |
+| --------------- | ------------------------------------------------------------- |
+| Test Case ID    | TC_LOGIN_001                                                  |
+| Test Scenario   | Verify login with valid email and password                    |
+| Preconditions   | User is registered and login page is accessible               |
+| Email           | admin\@email.com                                              |
+| Password        | admin\@123                                                    |
+| Expected Result | User should successfully log in and navigate to the Dashboard |
+
+### Test Steps
+
+| Step | Action                      | Test Data        | Expected Result                                 |
+| ---- | --------------------------- | ---------------- | ----------------------------------------------- |
+| 1    | Navigate to login page      | Login URL        | Login page should be displayed                  |
+| 2    | Enter valid email address   | admin\@email.com | Email should be accepted                        |
+| 3    | Enter valid password        | admin\@123       | Password should be entered and masked           |
+| 4    | Click the Sign in button    | Sign in          | User should be authenticated successfully       |
+| 5    | Verify URL should not be in url |                  | User should not see login in the url |
+
+Pass Criteria: The test passes if the user successfully logs in using valid credentials and the Dashboard page is displayed.
+
+Actual Result: Not executed yet.
+
+Test Status: Not Run.
