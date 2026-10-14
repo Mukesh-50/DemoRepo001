@@ -1,0 +1,5 @@
+langgraph==1.2.15
+langchain-openai==1.7.1
+python-dotenv==1.2.4
+playwright==1.64.0
+grandalf==0.8
