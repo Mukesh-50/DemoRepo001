@@ -1,0 +1,28 @@
+### Test Case: Verify User Can Sign Out After Login
+
+Feature: Logout Functionality Test Type: Positive URL: https://freelance-learn-automation.vercel.app/login
+
+| Field           | Details                                                  |
+| --------------- | -------------------------------------------------------- |
+| Test Case ID    | TC_LOGOUT_004                                            |
+| Test Scenario   | Verify a logged-in user can sign out                     |
+| Preconditions   | User is registered and login page is accessible          |
+| Email           | admin@email.com                                          |
+| Password        | admin@123                                                |
+| Expected Result | User is signed out and returned to the login page        |
+
+### Test Steps
+
+| Step | Action                          | Test Data       | Expected Result                                  |
+| ---- | ------------------------------- | --------------- | ------------------------------------------------ |
+| 1    | Navigate to login page          | Login URL       | Login page should be displayed                   |
+| 2    | Enter valid email address       | admin@email.com | Email should be accepted                         |
+| 3    | Enter valid password            | admin@123       | Password should be entered                       |
+| 4    | Click the Sign in button        | Sign in         | User is logged in and a "Sign out" button shows  |
+| 5    | Click the menu icon             | menu            | Menu should open                                 |
+| 6    | Click the "Sign out" button     | Sign out        | User should be signed out                        |
+| 7    | Verify user is on login page    | Login URL       | URL should contain login and "Sign in" button shows |
+
+Pass Criteria: The test passes if, after signing out, the URL contains login and the "Sign in" button is visible.
+
+Test Status: Not Run.
