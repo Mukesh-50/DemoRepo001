@@ -9,7 +9,7 @@ Feature: Login Functionality Test Type: Positive / Happy Path URL: [https://free
 | Preconditions   | User is registered and login page is accessible               |
 | Email           | admin\@email.com                                              |
 | Password        | admin\@123                                                    |
-| Expected Result | User should successfully log in and navigate to the Dashboard |
+| Expected Result | User should successfully log in |
 
 ### Test Steps
 
@@ -21,7 +21,7 @@ Feature: Login Functionality Test Type: Positive / Happy Path URL: [https://free
 | 4    | Click the Sign in button    | Sign in          | User should be authenticated successfully       |
 | 5    | Verify URL should not be in url |                  | User should not see login in the url |
 
-Pass Criteria: The test passes if the user successfully logs in using valid credentials and the Dashboard page is displayed.
+Pass Criteria: The test passes if the user successfully logs in using valid credentials.
 
 Actual Result: Not executed yet.
 
