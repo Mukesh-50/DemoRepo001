@@ -5,7 +5,7 @@ Feature: Login Page Navigation Test Type: Positive URL: https://freelance-learn-
 | Field           | Details                                                  |
 | --------------- | -------------------------------------------------------- |
 | Test Case ID    | TC_LOGIN_003                                             |
-| Test Scenario   | Verify the "New user? Signup111" link opens the signup page |
+| Test Scenario   | Verify the "New user? Signup" link opens the signup page |
 | Preconditions   | Login page is accessible                                 |
 | Expected Result | User should be taken to the signup page                  |
 
