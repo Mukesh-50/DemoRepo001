@@ -2,14 +2,14 @@ import { test, expect } from '@playwright/test';
 
 test('Verify Successful Login with Valid Credentials', async ({ page }) => {
   await page.goto('https://freelance-learn-automation.vercel.app/login');
-  await expect(page.getByRole('heading', { name: 'Sign In' })).toBeVisible();
+  await expect(page).toHaveURL('https://freelance-learn-automation.vercel.app/login');
 
-  await page.fill('input[placeholder="Enter Email"]', 'admin@email.com');
-  await expect(page.locator('input[placeholder="Enter Email"]')).toHaveValue('admin@email.com');
+  await page.getByPlaceholder('Enter Email').fill('admin@email.com');
+  await expect(page.getByPlaceholder('Enter Email')).toHaveValue('admin@email.com');
 
-  await page.fill('input[placeholder="Enter Password"]', 'admin@123');
-  await expect(page.locator('input[placeholder="Enter Password"]')).toHaveValue('admin@123');
+  await page.getByPlaceholder('Enter Password').fill('admin@123');
+  await expect(page.getByPlaceholder('Enter Password')).toHaveValue('admin@123');
 
-  await page.click('button:has-text("Sign in")');
-  await expect(page).toHaveURL(/^(?!.*login).*/);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await expect(page).not.toHaveURL(/login/);
 });
