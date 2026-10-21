@@ -11,5 +11,6 @@ test('Verify Login Fails with Invalid Password', async ({ page }) => {
     await expect(page.getByPlaceholder('Enter Password')).toHaveValue('wrong@123');
     
     await page.getByRole('button', { name: 'Sign in' }).click();
+    
     await expect(page).toHaveURL(/.*login/);
 });
