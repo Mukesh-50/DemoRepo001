@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-test('Verify Login Fails with Invalid Password', async ({ page }) => {
+test('TC_LOGIN_002: Verify Login Fails with Invalid Password', async ({ page }) => {
   // Step 1: Navigate to login page
   await page.goto('https://freelance-learn-automation.vercel.app/login');
-  await expect(page).toHaveURL(/login/);
+  await expect(page).toHaveURL(/.*login/);
 
   // Step 2: Enter valid email address
   await page.getByPlaceholder('Enter Email').fill('admin@email.com');
@@ -17,5 +17,5 @@ test('Verify Login Fails with Invalid Password', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign in' }).click();
 
   // Step 5: Verify user is still on login
-  await expect(page).toHaveURL(/login/);
+  await expect(page).toHaveURL(/.*login/);
 });
