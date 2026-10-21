@@ -14,7 +14,7 @@ Feature: Login Page Navigation Test Type: Positive URL: https://freelance-learn-
 | Step | Action                          | Test Data | Expected Result                     |
 | ---- | ------------------------------- | --------- | ----------------------------------- |
 | 1    | Navigate to login page          | Login URL | Login page should be displayed      |
-| 2    | Click the "New user? Signup" link |         | Signup page should open             |
+| 2    | Click the "New user? Signup1111" link |         | Signup page should open             |
 | 3    | Verify signup page URL          |           | URL should contain signup           |
 
 Pass Criteria: The test passes if clicking the link opens a page whose URL contains signup.
