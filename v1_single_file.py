@@ -1,30 +1,8 @@
-# VERSION 1: the whole workflow in a single file
-# (Version 2 is the same workflow split into a framework: see main.py and workflow/)
-#
-# Generates a Playwright test for every manual test case in test_cases/
-# Run:  python v1_single_file.py
-#
-# Flow:
-#   START -> (test file already exists?) -> yes -> END (skip)
-#                                        -> no  -> read_test_case -> read_page -> generate_test
-#
-#   generate_test -> save_test -> run_test -> (check result) -> passed -> ask_human
-#                       ^                                    -> failed -> fix_test (max 3 tries)
-#                       |                                                    |
-#                       +----------------------------------------------------+
-#
-#   ask_human (pauses and asks you: commit?) -> yes -> commit_test -> ask_push
-#                                            -> no  -> END
-#
-#   ask_push (pauses and asks you: push?)    -> yes -> push_test -> END
-#                                            -> no  -> END
-
 import glob
 import os
 import re
 import subprocess
 from typing import TypedDict
-
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
@@ -33,10 +11,6 @@ from langgraph.types import Command, interrupt
 from playwright.sync_api import sync_playwright
 
 
-# ---------------------------------------------------------------
-# Step 1: Settings
-# ---------------------------------------------------------------
-# Load OPENAI_API_KEY (and optional OPENAI_MODEL) from the .env file
 load_dotenv()
 
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
@@ -48,9 +22,6 @@ GIT_BRANCH = "main"
 llm = ChatOpenAI(model=OPENAI_MODEL, temperature=0)
 
 
-# ---------------------------------------------------------------
-# Step 2: State (the data that moves between the nodes)
-# ---------------------------------------------------------------
 class TestState(TypedDict):
     input_file: str      # manual test case, e.g. test_cases/TC001.txt
     output_file: str     # generated test, e.g. tests/tc001.spec.ts
@@ -65,9 +36,7 @@ class TestState(TypedDict):
     push: bool           # was the commit pushed?
 
 
-# ---------------------------------------------------------------
-# Step 3: Nodes (each node is a normal Python function)
-# ---------------------------------------------------------------
+
 def read_test_case(state: TestState):
     print(f"Reading test case from {state['input_file']}")
     with open(state["input_file"], "r") as file:
@@ -174,18 +143,29 @@ Error message:
 
 
 def ask_human(state: TestState):
-    # Note: when the graph resumes, this node runs again from the top.
-    # So we don't print() here; everything to show goes inside the interrupt message.
-    message = ""
+  
+    if state["passed"]:
+        result = "PASSED"
+    else:
+        result = "FAILED"
+
+    question = "Test " + result + ". Do you want to commit " + state["output_file"] + "? (yes/no): "
+
+    # Step 3: If the test failed, show the error above the question
     if not state["passed"]:
-        message += state["run_result"] + "\n"
+        question = state["run_result"] + "\n" + question
 
-    status = "PASSED" if state["passed"] else "FAILED"
-    message += f"Test {status}. Do you want to commit {state['output_file']}? (yes/no): "
+    # Step 4: Stop here and wait for the user to type an answer
+    answer = interrupt(question)
 
-    # interrupt() pauses the graph here and waits for your answer
-    answer = interrupt(message)
-    return {"commit": answer.strip().lower() in ("yes", "y")}
+    # Step 5: Remove extra spaces and make it small letters ("YES " -> "yes")
+    answer = answer.strip().lower()
+
+    # Step 6: If the answer is yes, commit. Otherwise, don't.
+    if answer == "yes" or answer == "y":
+        return {"commit": True}
+    else:
+        return {"commit": False}
 
 
 def commit_test(state: TestState):
@@ -220,9 +200,7 @@ def push_test(state: TestState):
     return {"push": result.returncode == 0}
 
 
-# ---------------------------------------------------------------
-# Step 4: Decision functions (pick the next step for conditional edges)
-# ---------------------------------------------------------------
+
 def check_test_exists(state: TestState):
     if os.path.exists(state["output_file"]):
         print(f"{state['output_file']} already exists, skipping")
@@ -318,10 +296,31 @@ for input_file in sorted(glob.glob(f"{TEST_CASES_DIR}/TC*.txt")):
 
 print("\n===== Summary =====")
 for input_file, output in results.items():
+    output_file = output["output_file"]
+
+    # Step 1: If the test already existed, we skipped it
     if "passed" not in output:
-        print(f"{input_file} -> {output['output_file']}: SKIPPED (test already exists)")
+        print(input_file + " -> " + output_file + ": SKIPPED (test already exists)")
+
     else:
-        status = "PASSED" if output["passed"] else "FAILED"
-        committed = "committed" if output["commit"] else "not committed"
-        pushed = "pushed" if output.get("push") else "not pushed"
-        print(f"{input_file} -> {output['output_file']}: {status} (attempts: {output['attempts']}, {committed}, {pushed})")
+        # Step 2: Did the test pass?
+        if output["passed"]:
+            status = "PASSED"
+        else:
+            status = "FAILED"
+
+        # Step 3: Did we commit it?
+        if output["commit"]:
+            committed = "committed"
+        else:
+            committed = "not committed"
+
+        # Step 4: Did we push it? (if we never asked, "push" is missing, so use .get)
+        if output.get("push"):
+            pushed = "pushed"
+        else:
+            pushed = "not pushed"
+
+        # Step 5: Print one line for this test
+        attempts = str(output["attempts"])
+        print(input_file + " -> " + output_file + ": " + status + " (attempts: " + attempts + ", " + committed + ", " + pushed + ")")
