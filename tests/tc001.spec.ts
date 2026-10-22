@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('Verify Successful Login with Valid Credentials', async ({ page }) => {
+test('TC_LOGIN_001: Verify Successful Login with Valid Credentials', async ({ page }) => {
   // Step 1: Navigate to login page
   await page.goto('https://freelance-learn-automation.vercel.app/login');
   await expect(page.getByRole('heading', { level: 2, name: 'Sign In' })).toBeVisible();
