@@ -37,7 +37,15 @@ def run_workflow(input_file: str):
 def print_summary(results: dict):
     print("\n===== Summary =====")
     for input_file, output in results.items():
-        if "passed" not in output:
+        # Was this test skipped?
+        # If the test file already existed, the graph ended right at START,
+        # so run_test never ran and "passed" was never added to the output.
+        if "passed" in output:
+            test_was_skipped = False
+        else:
+            test_was_skipped = True
+
+        if test_was_skipped:
             print(f"{input_file} -> {output['output_file']}: SKIPPED (test already exists)")
         else:
             status = "PASSED" if output["passed"] else "FAILED"

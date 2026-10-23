@@ -8,13 +8,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # AI model used to write and fix tests. Set OPENAI_MODEL in .env to change it.
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 
 # How many times to run the test (first try + fixes) before giving up
 MAX_ATTEMPTS = 3
 
 # Where the manual test cases are, and where generated tests are saved
 TEST_CASES_DIR = "test_cases"
+
 TESTS_DIR = "tests"
 
 # Git branch to push to

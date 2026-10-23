@@ -23,6 +23,7 @@ def run_test(state: TestState):
         capture_output=True,
         text=True,
     )
+    
     passed = result.returncode == 0
     print("Test PASSED" if passed else "Test FAILED")
 

@@ -1,9 +1,7 @@
 # Human-in-the-loop nodes (ask before commit and push) and the git nodes
 
 import subprocess
-
 from langgraph.types import interrupt
-
 from config import GIT_BRANCH
 from workflow.state import TestState
 

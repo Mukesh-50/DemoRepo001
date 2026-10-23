@@ -13,7 +13,7 @@ from playwright.sync_api import sync_playwright
 
 load_dotenv()
 
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 MAX_ATTEMPTS = 3
 TEST_CASES_DIR = "test_cases"
 TESTS_DIR = "tests"
@@ -77,6 +77,8 @@ Rules:
 - Use await expect() for every verification step.
 - Use locators like getByRole() and getByPlaceholder() based on the page snapshot below.
 - Only use elements that exist in the page snapshot. Do not guess the page title.
+- If an element named in the test case does not exist in the page snapshot,
+  do not replace it. Use the exact name from the test case so the test fails.
 - Return ONLY TypeScript code. No explanation, no markdown.
 
 Manual test case:
@@ -124,6 +126,8 @@ The Playwright test below failed. Fix it.
 The error message contains a snapshot of the real page at the moment it failed.
 Use it, and the starting page snapshot below, to correct locators and expected values.
 Only use elements that exist in a snapshot. Do not guess.
+If an element named in the test case does not exist in a snapshot,
+do not replace it. Keep the exact name from the test case so the test keeps failing.
 Return ONLY the full fixed TypeScript code. No explanation, no markdown.
 
 Manual test case:
@@ -170,7 +174,9 @@ def ask_human(state: TestState):
 
 def commit_test(state: TestState):
     print(f"Committing {state['input_file']} and {state['output_file']} to git")
+    
     subprocess.run(["git", "add", state["input_file"], state["output_file"]])
+    
     result = subprocess.run(
         # Listing the files after "--" commits only these two, even if other changes are staged
         ["git", "commit", "-m", f"Add Playwright test for {state['input_file']}", "--", state["input_file"], state["output_file"]],
@@ -248,9 +254,13 @@ graph.add_node("ask_push", ask_push)
 graph.add_node("push_test", push_test)
 
 graph.add_conditional_edges(START, check_test_exists, {"skip": END, "new": "read_test_case"})
+
 graph.add_edge("read_test_case", "read_page")
+
 graph.add_edge("read_page", "generate_test")
+
 graph.add_edge("generate_test", "save_test")
+
 graph.add_edge("save_test", "run_test")
 graph.add_conditional_edges("run_test", check_result, {"fix": "fix_test", "done": "ask_human"})
 graph.add_edge("fix_test", "save_test")
@@ -272,6 +282,7 @@ app.get_graph().print_ascii()
 results = {}
 
 for input_file in sorted(glob.glob(f"{TEST_CASES_DIR}/TC*.txt")):
+
     print(f"\n########## {input_file} ##########")
     # test_cases/TC001.txt -> tests/tc001.spec.ts
     name = os.path.basename(input_file).replace(".txt", "").lower()
@@ -295,11 +306,20 @@ for input_file in sorted(glob.glob(f"{TEST_CASES_DIR}/TC*.txt")):
     results[input_file] = output
 
 print("\n===== Summary =====")
+
 for input_file, output in results.items():
+    
     output_file = output["output_file"]
 
-    # Step 1: If the test already existed, we skipped it
-    if "passed" not in output:
+    # Step 1: Was this test skipped?
+    # If the test file already existed, the graph ended right at START,
+    # so run_test never ran and "passed" was never added to the output.
+    if "passed" in output:
+        test_was_skipped = False
+    else:
+        test_was_skipped = True
+
+    if test_was_skipped:
         print(input_file + " -> " + output_file + ": SKIPPED (test already exists)")
 
     else:
