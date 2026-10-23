@@ -15,12 +15,11 @@ test('Verify User Can Sign Out After Login', async ({ page }) => {
 
   // Step 4: Click the Sign in button
   await page.getByRole('button', { name: 'Sign in' }).click();
-  // Assuming a "Sign out" button appears after login
   await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible();
 
   // Step 5: Click the menu icon
   await page.getByRole('img', { name: 'menu' }).click();
-  // Assuming menu opens, no specific verification as menu opening is not visible in snapshot
+  // Assuming menu opens, no specific element to verify
 
   // Step 6: Click the "Sign out" button
   await page.getByRole('button', { name: 'Sign out' }).click();
