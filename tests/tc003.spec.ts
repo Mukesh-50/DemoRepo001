@@ -9,5 +9,5 @@ test('TC_LOGIN_003: Verify New User Signup Link Opens Signup Page', async ({ pag
   await page.getByRole('link', { name: 'New user? Signup' }).click();
 
   // Step 3: Verify signup page URL
-  await expect(page).toHaveURL(/.*signup.*/);
+  await expect(page).toHaveURL(/.*signup/);
 });
