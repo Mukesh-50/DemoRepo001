@@ -24,7 +24,7 @@ The workflow:
 ## Prerequisites
 
 - Python 3.10 or newer
-- Node.js 18 or newer
+- Node.js 20 or newer
 - Git
 - An OpenAI API key
 
